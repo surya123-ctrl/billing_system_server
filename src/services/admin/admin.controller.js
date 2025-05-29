@@ -37,7 +37,7 @@ const loginAdminController = async (req, res) => {
             return error(res, 'Invalid Credentials', 401);
         }
         const token = generateToken(admin._id);
-        return success(res, `Welcome ${admin.name}!`, { token, admin: { name: admin.name, email: admin.email } }, 201)
+        return success(res, `Welcome ${admin.name}!`, { token, admin }, 201)
     }
     catch (err) {
         console.error("❌ Login Error:", err.message);
@@ -72,7 +72,7 @@ const signUpAdminController = async (req, res) => {
 const shopController = async (req, res) => {
     try {
         const shops = await Shop.find({}).sort({ createdAt: -1 });
-        return success(res, "Shops fetched successfully", { shops }, 200);
+        return success(res, "", { shops }, 200);
     }
     catch (err) {
         console.error("❌ DB Error:", err.message);
@@ -86,7 +86,7 @@ const getMenuByShopController = async (req, res) => {
     try {
         const items = await MenuItem.find({ shopId });
         if(!items.length) return success(res, 'No items found', [], 200);
-        return success(res, 'Menu Fetched Successfully', { items }, 200);
+        return success(res, '', { items }, 200);
     }
     catch (err) {
         console.error("❌ DB Error:", err.message);

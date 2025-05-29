@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 const tokenRouter = require('./services/token/token.route');
 const adminRouter = require('./services/admin/admin.route');
 const menuRouter = require('./services/shop/menu.route');
+const customerRouter = require('./services/customer/customer.route');
 // const orderRouter = require('./services/order/order.route');
 
 // DB
@@ -29,6 +30,7 @@ app.use(morgan('dev'));
 app.use('/token', tokenRouter);
 app.use('/admin', adminRouter);
 app.use('/menu', menuRouter);
+app.use('/customer', customerRouter);
 // app.use('/scan', orderRouter);
 
 const { errorHandler } = require('./services/common/errorHandler');

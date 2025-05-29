@@ -8,15 +8,15 @@ const JWT_SECRET = process.env.JWT_SECRET;
 let orders = {};
 const generateToken = () => {
     const payload = {
-        slipId: `SLIP-${Math.floor(1000 + Math.random() * 9000)}`,
-        shopId: `SECTOR_25_PANCHKULA`,
+        // slipId: `SLIP-${Math.floor(1000 + Math.random() * 9000)}`,
+        // shopId: `SECTOR_25_PANCHKULA`,
         timestamp: new Date().toISOString(),
         exp: Math.floor(Date.now() / 1000) + (60 * 60)
     }
     console.log(payload);
     const token = jwt.sign(payload, JWT_SECRET);
     console.log(token);
-    return { token, slipId: payload.slipId };
+    return token;
 }
 
 const verifyToken = (token) => {
