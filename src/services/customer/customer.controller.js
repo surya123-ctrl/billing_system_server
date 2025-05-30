@@ -1,5 +1,11 @@
 const { success, error } = require('../utils/responseHandler');
+const jwt = require('jsonwebtoken');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
+if (!process.env.JWT_SECRET) { 
+    console.error('❌ JWT_SECRET is undefined');
+}   
 const MenuItem = require('../../models/MenuItem');
+const Customer = require('../../models/Customer');
 const getMenuController = async (req, res) => {
     const { shopId } = req.params;
     const { itemState } = req.query;
@@ -24,6 +30,36 @@ const getMenuController = async (req, res) => {
     }
 }
 
+const startSlipController = async (req, res) => {
+    const { shopId } = req.body;
+    if (!shopId) {
+        return error(res, 'Please provide shop ID', 400);
+    }
+    try {
+        const slipId = `SLIP-${Math.floor(1000 + Math.random() * 9000)}`;
+        const payload = {
+            slipId,
+            shopId,
+            timestamp: new Date().toISOString(),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 2)
+        };
+        const jwtToken = jwt.sign(payload, process.env.JWT_SECRET);
+        const newCustomer = new Customer({
+            token: jwtToken,
+            slipId,
+            shopId,
+            status: 'active',
+            paymentStatus: 'pending',
+        });
+        await newCustomer.save();
+        return success(res, 'Slip started successfully', { newCustomer }, 200);
+    } catch (err) {
+        console.error('Error starting slip:', err.message);
+        return error(res, 'Failed to start slip', 500);
+    }
+}
+
 module.exports = {
-    getMenuController
+    getMenuController,
+    startSlipController
 }
