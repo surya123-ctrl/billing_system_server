@@ -11,7 +11,7 @@ const generateToken = () => {
         // slipId: `SLIP-${Math.floor(1000 + Math.random() * 9000)}`,
         // shopId: `SECTOR_25_PANCHKULA`,
         timestamp: new Date().toISOString(),
-        exp: Math.floor(Date.now() / 1000) + (60 * 60)
+        exp: Math.floor(Date.now() / 1000) + (1)
     }
     console.log(payload);
     const token = jwt.sign(payload, JWT_SECRET);
