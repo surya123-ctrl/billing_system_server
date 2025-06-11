@@ -6,6 +6,11 @@ if (!process.env.JWT_SECRET) {
 }   
 const MenuItem = require('../../models/MenuItem');
 const Customer = require('../../models/Customer');
+const jwt = require('jsonwebtoken');
+const {v4: uuidv4} = require('uuid');
+const Customer = require('../../models/Customer');
+const dotenv = require('dotenv');
+dotenv.config();
 const getMenuController = async (req, res) => {
     const { shopId } = req.params;
     const { itemState } = req.query;
@@ -59,7 +64,35 @@ const startSlipController = async (req, res) => {
     }
 }
 
+const postHandleScanner = async (req, res) => {
+    const { shopId } = req.body;
+    if(!shopId) return error(res, 'Missing ShopId', 400);
+    try {
+        const slipId = `SLIP-${uuidv4().slice(0, 8).toUpperCase()}`;
+        const payload = {
+            slipId, shopId,
+            exp: Math.floor(Date.now() / 1000 + (60 * 60 * 2))
+        }
+        const jwtToken = jwt.sign(payload, process.env.JWT_SECRET);
+        console.log(payload, jwtToken);
+        const newCustomer = new Customer({
+            token: jwtToken,
+            slipId,
+            shopId,
+            status: 'active',
+            paymentStatus: 'unpaid'
+        });
+        await newCustomer.save();
+        return success(res, 'New Slip Generated', {newCustomer})
+    }
+    catch (err) {
+        console.error("❌ Error starting slip:", err);
+        return error(res, "Failed to start slip", 500);
+    }
+}
+
 module.exports = {
     getMenuController,
+    postHandleScanner,
     startSlipController
 }

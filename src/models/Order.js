@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
+const MenuItem = require('./MenuItem');
 
 const ItemSchema = new mongoose.Schema({
-  id: {
-    type: String,
+  itemId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MenuItem',
     required: true
   },
   name: {
@@ -14,18 +16,10 @@ const ItemSchema = new mongoose.Schema({
     required: true
   },
   quantity: {
-    value: {
-      type: Number,
-      required: true,
-      default: 1
-    },
-    unit: {
-      type: String,
-      enum: ['piece', 'kg', 'g', 'litre', 'ml', 'packet', 'dozen', 'unit', 'custom'],
-      required: true,
-      default: 'unit'
-    }
-  }
+    type: Number,
+    required: true,
+    default: 1
+  },
 });
 
 
@@ -33,7 +27,14 @@ const OrderSchema = new mongoose.Schema({
   token: {
     type: String,
     required: true,
-    unique: true
+  },
+  slipId: {
+    type: String,
+    required: true,
+  },
+  shopId: {
+    type: mongoose.Schema.ObjectId,
+    required: true,
   },
   items: [ItemSchema],
   totalAmount: {
@@ -49,10 +50,6 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     enum: ['paid', 'unpaid'],
     default: 'unpaid'
-  },
-  completedAt: {
-    type: Date,
-    default: null
   }
 }, {
   timestamps: true

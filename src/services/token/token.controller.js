@@ -8,6 +8,7 @@ const generateTokenController = (req, res) => {
 const verifyTokenController = (req, res) => {
     const { token } = req.params;
     const result = verifyToken(token);
+    console.log(result)
     res.json(result)
 }
 module.exports = { generateTokenController, verifyTokenController };
