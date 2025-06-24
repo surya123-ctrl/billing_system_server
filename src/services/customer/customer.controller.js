@@ -6,11 +6,7 @@ if (!process.env.JWT_SECRET) {
 }   
 const MenuItem = require('../../models/MenuItem');
 const Customer = require('../../models/Customer');
-const jwt = require('jsonwebtoken');
 const {v4: uuidv4} = require('uuid');
-const Customer = require('../../models/Customer');
-const dotenv = require('dotenv');
-dotenv.config();
 const getMenuController = async (req, res) => {
     const { shopId } = req.params;
     const { itemState } = req.query;
@@ -91,8 +87,27 @@ const postHandleScanner = async (req, res) => {
     }
 }
 
+const updateCustomerDetails = async (req, res) => {
+    const { name, email, phone } = req.body;
+    try {
+        const updatedCustomer = await Customer.findByIdAndUpdate(
+            req.params.id,
+            { name, email, phone },
+            { new: true, runValidators: true, upsert: true}
+        );
+
+        if(!updatedCustomer) return error(res, 'Please scan QR again.', 404);
+        return success(res, '', updatedCustomer)
+    }
+    catch (err) {
+        console.error("❌ Error updating customer details:", err);
+        return error(res, "Error updating customer details", 500);
+    }
+}
+
 module.exports = {
     getMenuController,
     postHandleScanner,
-    startSlipController
+    startSlipController,
+    updateCustomerDetails
 }

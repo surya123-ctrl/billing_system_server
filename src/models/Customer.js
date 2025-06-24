@@ -24,6 +24,15 @@ const CustomerSchema = new mongoose.Schema({
         type: String,
         enum: ['paid', 'unpaid'],
         default: 'unpaid'
+    },
+    name:{
+        type: String,
+    },
+    email: {
+        type: String
+    },
+    phone: {
+        type: String
     }
 }, { timestamps: true });
 

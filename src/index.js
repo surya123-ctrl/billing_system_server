@@ -9,6 +9,9 @@ const adminRouter = require('./services/admin/admin.route');
 const menuRouter = require('./services/shop/menu.route');
 const customerRouter = require('./services/customer/customer.route');
 const orderRouter = require('./services/order/order.route');
+const cashfreeRoute = require('./services/cashfree/cashfree.route');
+const razorpayRoute = require('./services/razorpay/razorpay.route');
+const authRoute = require('./services/auth/auth.route');
 // const orderRouter = require('./services/order/order.route');
 
 // DB
@@ -33,6 +36,9 @@ app.use('/admin', adminRouter);
 app.use('/menu', menuRouter);
 app.use('/customer', customerRouter);
 app.use('/order', orderRouter);
+app.use('/cashfree', cashfreeRoute);
+app.use('/razorpay', razorpayRoute);
+app.use('/auth', authRoute);
 // app.use('/scan', orderRouter);
 
 const { errorHandler } = require('./services/common/errorHandler');
