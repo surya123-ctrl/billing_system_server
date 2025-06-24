@@ -48,8 +48,24 @@ const deleteMenuItemController = async (req, res) => {
     }
 }
 
+const getMenuController = async (req, res) => {
+    const { shopId } = req.params;
+    if (!shopId) return error(res, 'Missing Shop ID', 400);
+    try {
+        const items = await MenuItem.find({ shopId });
+        if (!items.length) return success(res, 'No items found', [], 200);
+        return success(res, '', { items }, 200);
+    }
+
+    catch (err) {
+        console.error("❌ DB Error:", err.message);
+        return error(res, "Failed to fetch menu items", 500);
+    }
+}
+
 module.exports = {
     addMenuController,
     editMenuItemController,
-    deleteMenuItemController
+    deleteMenuItemController,
+    getMenuController
 }
