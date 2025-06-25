@@ -30,10 +30,12 @@ const proceedCheckoutController = async (req, res) => {
         }
         console.log("total", totalAmount)
         console.log("final item", finalItems)
+        const customerId = userId;
         const newOrder = new Order({
             token,
             slipId,
             shopId,
+            customerId,
             items: finalItems,
             totalAmount,
             status: 'pending',

@@ -15,6 +15,10 @@ const CustomerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    customerId: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
         enum: ['active', 'completed'],
