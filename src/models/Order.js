@@ -36,6 +36,10 @@ const OrderSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     required: true,
   },
+  customerId: {
+    type: mongoose.Schema.ObjectId,
+    required: true
+  },
   items: [ItemSchema],
   totalAmount: {
     type: mongoose.Schema.Types.Decimal128,
