@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js",
+    "worker": "nodemon src/workers/orderStatusWorker.js",
+    "start:both": "concurrently \"npm:dev\" \"npm:worker\""
+
   },
   "keywords": [],
   "author": "",
@@ -12,7 +15,7 @@
   "dependencies": {
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
-    "bullmq": "^5.56.0",
+    "bullmq": "^5.56.3",
     "cashfree-pg": "^5.0.8",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -25,5 +28,8 @@
     "razorpay": "^2.9.6",
     "redis": "^5.5.6",
     "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
   }
 }

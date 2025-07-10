@@ -1,5 +1,6 @@
 const MenuItem = require('../../models/MenuItem');
 const Order = require('../../models/Order');
+const { orderStatusQueue } = require('../../queue/orderStatusQueue');
 const { error, success } = require('../utils/responseHandler');
 const proceedCheckoutController = async (req, res) => {
     const { token, shopId, slipId, userId, cartArray } = req.body;
@@ -56,21 +57,27 @@ const updateStatusController = async (req, res) => {
         return error(res, 'Missing required fields!', 400);
     }
     try {
-        const updates = {};
-        if (status) updates.status = status;
-        if (paymentStatus) updates.paymentStatus = paymentStatus;
+        await orderStatusQueue.add('update-order', {
+            orderId,
+            status,
+            paymentStatus
+        });
+        // const updates = {};
+        // if (status) updates.status = status;
+        // if (paymentStatus) updates.paymentStatus = paymentStatus;
 
-        const updateOrder = await Order.findOneAndUpdate(
-            { _id: orderId },
-            { $set: updates },
-            { new: true }
-        );
+        // const updateOrder = await Order.findOneAndUpdate(
+        //     { _id: orderId },
+        //     { $set: updates },
+        //     { new: true }
+        // );
 
-        if (!updateOrder) {
-            return error(res, 'Order not found!', 404);
-        }
+        // if (!updateOrder) {
+        //     return error(res, 'Order not found!', 404);
+        // }
 
-        return success(res, 'Order status updated!', { order: updateOrder });
+        // return success(res, 'Order status updated!', { order: updateOrder });
+        return success(res, 'Payment received! Order will be updated shortly.', {});
     } catch (err) {
         console.error("❌ DB Error:", err.message);
         return error(res, "Internal server error", 500);
