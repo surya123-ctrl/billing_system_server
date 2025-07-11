@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const { Worker } = require('bullmq');
 const { redis } = require('../lib/redis');
-const Order = require('../models/Order');
-
 require('dotenv').config();
+const { getIO } = require('../socket/socket');
+const { io: ClientIO } = require('socket.io-client');
+const socket = ClientIO('http://localhost:5000');
+const Customer = require('../models/Customer');
+const Order = require('../models/Order');
 
 async function startWorker() {
     try {
@@ -26,10 +29,16 @@ async function startWorker() {
                     { _id: orderId },
                     { $set: updates },
                     { new: true }
-                );
+                ).populate('customerId', 'name email phone');
 
                 console.log(`✅ Order updated from "${previousOrder.status}" → "${status}"`);
-
+                if (updatedOrder && updatedOrder.shopId) {
+                    socket.emit('orderUpdateFromWorker', {
+                        shopId: updatedOrder.shopId.toString(),
+                        order: updatedOrder
+                    });
+                    console.log(`📡 Emitted update to shop ${updatedOrder.shopId}`);
+                }
                 if (status === 'processing' && paymentStatus === 'paid') {
                     console.log('📨 Send email or perform next actions...');
                 }

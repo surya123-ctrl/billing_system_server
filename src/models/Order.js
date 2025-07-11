@@ -34,10 +34,12 @@ const OrderSchema = new mongoose.Schema({
   },
   shopId: {
     type: mongoose.Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   customerId: {
     type: mongoose.Schema.ObjectId,
+    ref: 'Customer',
     required: true
   },
   items: [ItemSchema],
