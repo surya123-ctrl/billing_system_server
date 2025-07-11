@@ -7,7 +7,6 @@
     "dev": "nodemon src/index.js",
     "worker": "nodemon src/workers/orderStatusWorker.js",
     "start:both": "concurrently \"npm:dev\" \"npm:worker\""
-
   },
   "keywords": [],
   "author": "",
@@ -27,6 +26,8 @@
     "morgan": "^1.10.0",
     "razorpay": "^2.9.6",
     "redis": "^5.5.6",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 const MenuItem = require('../../models/MenuItem');
 const Order = require('../../models/Order');
+const Customer = require('../../models/Customer')
 const { success, error } = require('../utils/responseHandler');
 const addMenuController = async (req, res) => {
     const { shopId, name, description, price, unit } = req.body;
@@ -75,21 +76,29 @@ const getProcessingOrdersController = async (req, res) => {
 
   try {
     const filter = { shopId };
+
     if (status) {
       if (!validStatuses.includes(status)) {
         return error(res, '❌ Invalid status value', 400);
       }
       filter.status = status;
     }
+
     if (paymentStatus) {
       if (!validPaymentStatuses.includes(paymentStatus)) {
         return error(res, '❌ Invalid paymentStatus value', 400);
       }
       filter.paymentStatus = paymentStatus;
     }
-    const orders = await Order.find(filter).sort({ createdAt: -1 });
 
-    return success(res, '', { count: orders.length, orders });
+    const orders = await Order.find(filter)
+      .sort({ createdAt: -1 })
+      .populate('customerId', 'name email phone'); // send only required fields
+
+    return success(res, '', {
+      count: orders.length,
+      orders
+    });
   } catch (err) {
     console.error('❌ DB Error:', err.message);
     return error(res, 'Failed to fetch orders', 500);

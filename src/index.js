@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-
+const http = require('http');
+const { initSocket } = require('./socket/socket');
 // Routes
 const tokenRouter = require('./services/token/token.route');
 const adminRouter = require('./services/admin/admin.route');
@@ -22,8 +23,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const server = http.createServer(app);
+
+
 // Connect to MongoDB
 connectDb();
+
+
+initSocket(server);
 
 // Middlewares
 app.use(cors());
@@ -45,6 +52,11 @@ const { errorHandler } = require('./services/common/errorHandler');
 app.use(errorHandler);
 
 // Start server
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
+//   console.log(`✅ QR-SWEET Backend running at http://localhost:${PORT}`);
+// });
+
+
+server.listen(PORT, () => {
   console.log(`✅ QR-SWEET Backend running at http://localhost:${PORT}`);
 });

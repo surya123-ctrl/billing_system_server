@@ -77,7 +77,7 @@ const updateStatusController = async (req, res) => {
         // }
 
         // return success(res, 'Order status updated!', { order: updateOrder });
-        return success(res, 'Payment received! Order will be updated shortly.', {});
+        return success(res, '', {});
     } catch (err) {
         console.error("❌ DB Error:", err.message);
         return error(res, "Internal server error", 500);
