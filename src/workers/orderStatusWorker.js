@@ -4,9 +4,10 @@ const { redis } = require('../lib/redis');
 require('dotenv').config();
 const { getIO } = require('../socket/socket');
 const { io: ClientIO } = require('socket.io-client');
-const socket = ClientIO('http://localhost:5000');
 const Customer = require('../models/Customer');
 const Order = require('../models/Order');
+
+const socket = ClientIO('http://localhost:5000');
 
 async function startWorker() {
     try {
@@ -35,9 +36,10 @@ async function startWorker() {
                 if (updatedOrder && updatedOrder.shopId) {
                     socket.emit('orderUpdateFromWorker', {
                         shopId: updatedOrder.shopId.toString(),
+                        orderId: updatedOrder._id.toString(),
                         order: updatedOrder
                     });
-                    console.log(`📡 Emitted update to shop ${updatedOrder.shopId}`);
+                    console.log(`📡 Emitted update to shopId ${updatedOrder.shopId} & orderId ${updatedOrder._id}`);
                 }
                 if (status === 'processing' && paymentStatus === 'paid') {
                     console.log('📨 Send email or perform next actions...');
