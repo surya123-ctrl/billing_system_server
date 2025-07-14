@@ -16,9 +16,15 @@ const initSocket = (httpServer) => {
             console.log(`🛒 Shop ${shopId} joined by socket ${socket.id}`);
         });
 
-        socket.on('orderUpdateFromWorker', ({ shopId, order }) => {
+        socket.on('joinOrderRoom', (orderId) => {
+            socket.join(orderId);
+            console.log(`📦 Order ${orderId} joined by ${socket.id}`);
+        })
+
+        socket.on('orderUpdateFromWorker', ({ shopId, orderId, order }) => {
             console.log(`📨 Worker pushed update for shop ${shopId}`);
             io.to(shopId).emit('orderUpdate', { order });
+            io.to(orderId).emit('orderUpdateFromWorker', order);
         });
 
         socket.on('disconnect', () => {
