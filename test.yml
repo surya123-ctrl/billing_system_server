@@ -1,0 +1,14 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 30
+      arrivalRate: 10
+  defaults:
+    headers:
+      Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOiIyMDI1LTA3LTE2VDExOjUzOjQyLjU4NVoiLCJleHAiOjE3NTI2NzA0MjIsImlhdCI6MTc1MjY2NjgyMn0.DFLhHE_XL9IVbMB9_jE_U4vwQsO5IemruqU70_vKWT8"
+      Content-Type: "application/json"
+
+scenarios:
+  - flow:
+      - get:
+          url: "/menu/getMenu/6857dbfba15073924446c315"

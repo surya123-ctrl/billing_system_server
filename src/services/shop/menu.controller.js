@@ -56,6 +56,7 @@ const getMenuController = async (req, res) => {
     try {
         const items = await MenuItem.find({ shopId });
         if (!items.length) return success(res, 'No items found', [], 200);
+        console.log(items)
         return success(res, '', { items }, 200);
     }
 

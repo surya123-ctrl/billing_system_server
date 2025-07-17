@@ -14,6 +14,7 @@ const cashfreeRoute = require('./services/cashfree/cashfree.route');
 const razorpayRoute = require('./services/razorpay/razorpay.route');
 const authRoute = require('./services/auth/auth.route');
 const shopDashboardRoute = require('./services/shop-dashboard/shopDashboard.route');
+const { authMiddleware } = require('../src/middleware/auth.middleware');
 // const orderRouter = require('./services/order/order.route');
 
 // DB
@@ -40,14 +41,14 @@ app.use(morgan('dev'));
 
 // Routes
 app.use('/token', tokenRouter);
-app.use('/admin', adminRouter);
-app.use('/menu', menuRouter);
-app.use('/customer', customerRouter);
-app.use('/order', orderRouter);
+app.use('/admin', authMiddleware, adminRouter);
+app.use('/menu', authMiddleware, menuRouter);
+app.use('/customer', authMiddleware, customerRouter);
+app.use('/order', authMiddleware, orderRouter);
 app.use('/cashfree', cashfreeRoute);
 app.use('/razorpay', razorpayRoute);
 app.use('/auth', authRoute);
-app.use('/shop-dashboard', shopDashboardRoute);
+app.use('/shop-dashboard', authMiddleware, shopDashboardRoute);
 // app.use('/scan', orderRouter);
 
 const { errorHandler } = require('./services/common/errorHandler');
